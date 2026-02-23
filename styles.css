@@ -284,6 +284,14 @@ h3 {
   padding: 1rem 1rem 1.05rem;
 }
 
+.hero-panel:focus-within,
+.callout:focus-within,
+.prefs-panel:focus-within,
+.checklist-form:focus-within,
+.resource-list li:focus-within {
+  box-shadow: 0 0 0 3px rgba(255, 159, 28, 0.35), var(--shadow);
+}
+
 .hero-panel h2 {
   font-size: 1.3rem;
 }
@@ -343,6 +351,16 @@ h3 {
 
 .section {
   padding: 1.75rem 0 2.1rem;
+}
+
+.section:target {
+  scroll-margin-top: 5.2rem;
+}
+
+.section:target .section-head h2 {
+  text-decoration: underline;
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.18em;
 }
 
 .section-alt {
@@ -591,6 +609,8 @@ code {
 }
 
 main:focus,
+header:focus,
+nav:focus,
 section:focus {
   outline: 3px solid #ff9f1c;
   outline-offset: 4px;

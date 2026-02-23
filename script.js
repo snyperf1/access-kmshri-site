@@ -224,26 +224,58 @@ function initPreferences() {
   }
 }
 
-function initSkipLinks() {
-  const skipLinks = Array.from(document.querySelectorAll(".skip-link[href^='#']"));
+function getHashTargetFromLink(link) {
+  const href = link.getAttribute("href");
+  if (!href || href === "#" || !href.startsWith("#")) return null;
+  const target = document.querySelector(href);
+  return target instanceof HTMLElement ? target : null;
+}
 
-  for (const link of skipLinks) {
-    link.addEventListener("click", () => {
-      const href = link.getAttribute("href");
-      if (!href) return;
+function focusHashTarget(target) {
+  if (!(target instanceof HTMLElement)) return;
 
-      const target = document.querySelector(href);
-      if (!(target instanceof HTMLElement)) return;
+  const hadTabIndex = target.hasAttribute("tabindex");
+  if (!hadTabIndex) {
+    target.setAttribute("tabindex", "-1");
+  }
 
-      if (!target.hasAttribute("tabindex")) {
-        target.setAttribute("tabindex", "-1");
+  requestAnimationFrame(() => {
+    target.focus({ preventScroll: true });
+  });
+}
+
+function initHashLinkFocus() {
+  const hashLinks = Array.from(document.querySelectorAll('a[href^="#"]'));
+
+  for (const link of hashLinks) {
+    link.addEventListener("click", (event) => {
+      if (
+        event.defaultPrevented ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        event.button !== 0
+      ) {
+        return;
       }
 
-      requestAnimationFrame(() => {
-        target.focus({ preventScroll: true });
-      });
+      const target = getHashTargetFromLink(link);
+      if (!target) return;
+
+      // Let native anchor navigation update the hash/scroll first, then move focus.
+      setTimeout(() => focusHashTarget(target), 0);
     });
   }
+
+  window.addEventListener("hashchange", () => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const target = document.querySelector(hash);
+    if (target instanceof HTMLElement) {
+      focusHashTarget(target);
+    }
+  });
 }
 
 function initActiveSectionNav() {
@@ -315,7 +347,7 @@ function init() {
   updateYear();
   initPreferences();
   initChecklist();
-  initSkipLinks();
+  initHashLinkFocus();
   initActiveSectionNav();
 }
 
