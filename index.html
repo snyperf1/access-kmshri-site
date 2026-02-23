@@ -8,6 +8,7 @@
       name="description"
       content="A practical, readable introduction to web accessibility with principles, testing tips, and an accessible checklist."
     />
+    <meta name="color-scheme" content="light" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,7 +19,10 @@
     <script src="./script.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="skip-links" aria-label="Skip links">
+      <a class="skip-link" href="#main-content">Skip to main content</a>
+      <a class="skip-link" href="#checklist">Skip to checklist</a>
+    </div>
 
     <header class="site-header" id="top">
       <div class="wrap">
@@ -26,9 +30,9 @@
           <span aria-hidden="true">◎</span>
           <span>Access Matters</span>
         </a>
-        <nav aria-label="Primary">
+        <nav id="primary-nav" aria-label="Primary">
           <ul class="nav-list">
-            <li><a href="#principles">Principles</a></li>
+            <li><a href="#principles" aria-current="location">Principles</a></li>
             <li><a href="#checklist">Checklist</a></li>
             <li><a href="#resources">Resources</a></li>
           </ul>
@@ -36,7 +40,7 @@
       </div>
     </header>
 
-    <main id="main-content">
+    <main id="main-content" tabindex="-1">
       <section class="hero" aria-labelledby="hero-title">
         <div class="wrap hero-grid">
           <div>
@@ -52,6 +56,32 @@
               <a class="button button-primary" href="#checklist">Start a Quick Check</a>
               <a class="button button-secondary" href="#resources">Learn More</a>
             </div>
+            <section class="prefs-panel" aria-labelledby="prefs-title">
+              <h2 id="prefs-title">Accessibility display controls</h2>
+              <p id="prefs-help" class="helper-text">
+                Adjust readability for this page. Settings are saved in this browser only.
+              </p>
+              <div class="toggle-toolbar">
+                <button type="button" class="toggle-button" data-pref-toggle="large-text" aria-pressed="false">
+                  Large text
+                </button>
+                <button type="button" class="toggle-button" data-pref-toggle="high-contrast" aria-pressed="false">
+                  High contrast
+                </button>
+                <button type="button" class="toggle-button" data-pref-toggle="extra-spacing" aria-pressed="false">
+                  Extra spacing
+                </button>
+                <button type="button" class="toggle-button" data-pref-toggle="reduce-motion" aria-pressed="false">
+                  Reduce motion
+                </button>
+                <button type="button" class="button button-secondary button-small" data-pref-reset>
+                  Reset display settings
+                </button>
+              </div>
+              <p id="pref-status" class="helper-text helper-inline" role="status" aria-live="polite" aria-atomic="true">
+                Display settings are off.
+              </p>
+            </section>
           </div>
           <aside class="hero-panel" aria-labelledby="panel-title">
             <h2 id="panel-title">This page practices what it teaches</h2>
@@ -139,10 +169,21 @@
                 <label><input type="checkbox" name="check" value="motion" /> Animations are optional or reduced when requested.</label>
               </fieldset>
 
-              <div class="checklist-status" aria-live="polite">
-                <p id="checklist-status-text">0 of 6 checks completed.</p>
-                <div class="meter" aria-hidden="true">
-                  <div class="meter-fill" id="meter-fill"></div>
+              <div class="checklist-status">
+                <p id="checklist-status-text" role="status" aria-live="polite" aria-atomic="true">
+                  0 of 6 checks completed.
+                </p>
+                <div class="meter-row">
+                  <progress
+                    class="meter"
+                    id="checklist-progress"
+                    max="6"
+                    value="0"
+                    aria-label="Checklist completion"
+                  >
+                    0%
+                  </progress>
+                  <p class="meter-percentage" id="checklist-percent" aria-hidden="true">0%</p>
                 </div>
               </div>
 
@@ -179,8 +220,9 @@
           <div class="section-head">
             <p class="eyebrow">Keep Learning</p>
             <h2 id="resources-title">Trusted accessibility resources</h2>
+            <p id="resources-note">Resource links below open in a new tab.</p>
           </div>
-          <ul class="resource-list">
+          <ul class="resource-list" aria-describedby="resources-note">
             <li>
               <a href="https://www.w3.org/WAI/" target="_blank" rel="noreferrer">
                 W3C Web Accessibility Initiative (WAI)
@@ -220,6 +262,8 @@
           <span>Access Matters</span>
           <span aria-hidden="true">•</span>
           <span id="year"></span>
+          <span aria-hidden="true">•</span>
+          <a href="#top">Back to top</a>
         </p>
       </div>
     </footer>
